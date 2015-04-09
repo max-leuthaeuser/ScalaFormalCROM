@@ -1,6 +1,5 @@
-/**
- * Created by lemax on 09.04.15.
- */
-class RoleGroup {
+case class RoleGroup(rolegroups: Set[Any], lower: Int, upper: Int) {
+
+  assert(0 <= lower && lower <= upper)
 
 }
