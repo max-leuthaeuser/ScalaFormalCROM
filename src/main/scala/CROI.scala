@@ -1,59 +1,68 @@
 import Utils._
 
-case class CROI[T](
-                    n: Set[T],
-                    r: Set[T],
-                    c: Set[T],
-                    type1: Map[T, T],
-                    plays: Set[(T, T, T)],
-                    links: Map[(T, T), Set[(T, T)]]
-                    ) {
+case class CROI(
+                 n: Set[String],
+                 r: Set[String],
+                 c: Set[String],
+                 type1: Map[String, String],
+                 plays: Set[(String, String, String)],
+                 links: Map[(String, String), Set[(String, String)]]
+                 ) {
 
-  // TODO: check this None
-  assert(mutualDisjoint(List(n, r, c /*, Set(None)*/)))
+  assert(mutualDisjoint(List(n, r, c, Set(""))))
   assert(totalFunction(n.union(r).union(c), type1.map { case (k, v) => (k, Set(v)) }))
 
-  def compliant(crom: CROM[T]): Boolean = crom.wellformed &&
+  def compliant(crom: CROM): Boolean = crom.wellformed &&
     axiom6(crom) && axiom7(crom) && axiom8(crom) &&
     axiom9(crom) && axiom10(crom) && axiom11(crom)
 
-  def axiom6(crom: CROM[T]): Boolean = ???
+  def axiom6(crom: CROM): Boolean =
+    all(plays.map { case (o, c1, r1) => crom.fills.contains(type1(o), type1(r1)) && crom.parts(type1(c1)).contains(type1(r1)) })
 
-  def axiom7(crom: CROM[T]): Boolean = ???
+  def axiom7(crom: CROM): Boolean =
+    all(for ((o, c, r) <- plays; (o1, c1, r1) <- plays if o1 == o && c1 == c && r1 != r) yield type1(r1) != type1(r))
 
-  def axiom8(crom: CROM[T]): Boolean = ???
+  def axiom8(crom: CROM): Boolean =
+    all((for (r1 <- r) yield for ((o, c, r2) <- plays if r2 == r1) yield (o, c)).map(_.size == 1))
 
-  def axiom9(crom: CROM[T]): Boolean = ???
+  def axiom9(crom: CROM): Boolean =
+    all(for (c1 <- c; r1 <- crom.rst if links.contains((r1, c1))) yield !links.contains(("", "")))
 
-  def axiom10(crom: CROM[T]): Boolean = ???
+  def axiom10(crom: CROM): Boolean =
+    all(for (o1 <- o; r1 <- r; rst1 <- crom.rst; c1 <- c if links.contains((rst1, c1))) yield
+    any(for (r_1 <- repsilon) yield
+    ((plays.contains(o1, c1, r1) && (type1(r1) == crom.rel(rst1).head)) == links((rst1, c1)).contains((r1, r_1))) && ((plays.contains(o1, c1, r1) && (type1(r1) == crom.rel(rst1).tail.head)) == links((rst1, c1)).contains((r_1, r1)))
+    )
+    )
 
-  def axiom11(crom: CROM[T]): Boolean = ???
+  def axiom11(crom: CROM): Boolean =
+    all(for (rst1 <- crom.rst; c1 <- c if links.contains((rst1, c1)); (r_1, r_2) <- links((rst1, c1)) if r_1 != "" && r_2 != "") yield
+    !links(rst1, c1).contains((r_1, "")) && !links((rst1, c1)).contains(("", r_2))
+    )
 
-  def o: Set[T] = n.union(c)
+  def o: Set[String] = n.union(c)
 
-  def o_c(c: T): Set[T] = plays.filter(_._2 == c).map(_._1)
+  def o_c(c: String): Set[String] = plays.filter(_._2 == c).map(_._1)
 
-  // TODO: check this None
-  def repsilon: Set[T] = r ++ None
+  def repsilon: Set[String] = r.union(Set(""))
 
-  def pred(rst: T, c: T, r: T): Set[T] = links.contains((rst, c)) match {
+  def pred(rst: String, c: String, r: String): Set[String] = links.contains((rst, c)) match {
     case true => links((rst, c)).filter(_._2 == r).map(_._1)
     case false => Set.empty
   }
 
-  def succ(rst: T, c: T, r: T): Set[T] = links.contains((rst, c)) match {
+  def succ(rst: String, c: String, r: String): Set[String] = links.contains((rst, c)) match {
     case true => links((rst, c)).filter(_._1 == r).map(_._2)
     case false => Set.empty
   }
 
-  // TODO: check this None
-  def player(r: T): Any = r match {
-    /* case None => None */
+  def player(r: String): String = r match {
+    case s: String if s.isEmpty => ""
     case _ => plays.find(_._3 == r) match {
       case Some(p) => p._1
       case _ => throw new RuntimeException(s"The given role '$r' is not played in the CROI!")
     }
   }
 
-  def overline_links(rst: T, c: T): Set[(T, T)] = links((rst, c)).map { case (r_1, r_2) => (player(r_1).asInstanceOf[T], player(r_2).asInstanceOf[T]) }
+  def overline_links(rst: String, c: String): Set[(String, String)] = links((rst, c)).map { case (r_1, r_2) => (player(r_1), player(r_2)) }
 }

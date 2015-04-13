@@ -1,13 +1,13 @@
 import Utils._
 
-case class CROM[T](
-                    nt: Set[T],
-                    rt: Set[T],
-                    ct: Set[T],
-                    rst: Set[T],
-                    fills: Set[(T, T)],
-                    parts: Map[T, Set[T]],
-                    rel: Map[T, Set[T]]
+case class CROM(
+                    nt: Set[String],
+                    rt: Set[String],
+                    ct: Set[String],
+                    rst: Set[String],
+                    fills: Set[(String, String)],
+                    parts: Map[String, Set[String]],
+                    rel: Map[String, Set[String]]
                     ) {
 
   assert(mutualDisjoint(List(nt, rt, ct, rst)))
