@@ -103,13 +103,35 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
       (testrg7, List("5"), 1))
 
     for ((t, s, e) <- rgtests) {
-      assert(atoms(t) == s)
-      assert(evaluate(t, test8, "1", "4") == e)
+      atoms(t) shouldBe s
+      evaluate(t, test8, "1", "4") shouldBe e
     }
   }
 
   feature("Testing Constraint Models") {
+    val test0 = CROM(List.empty, List.empty, List.empty, List.empty, List.empty, Map.empty, Map.empty)
+    val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
 
+    val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
+
+    val rgxor = RoleGroup(List("2", "3"), 1, 1)
+    val testcm0 = ConstraintModel(Map.empty, Map.empty, List.empty)
+
+    val testcm1 = ConstraintModel(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val testcm2 = ConstraintModel(Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
+    val testcm3 = ConstraintModel(Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
+    val testcm4 = ConstraintModel(Map("4" -> List(((1, 1), "5"))), Map.empty, List.empty)
+    val testcm5 = ConstraintModel(Map("5" -> List(((1, 1), "2"))), Map.empty, List.empty)
+
+    val cmtests = Seq((testcm0, true), (testcm1, true), (testcm2, true),
+      (testcm3, true), (testcm4, false), (testcm5, true))
+
+    for ((t, a12) <- cmtests) {
+      t.axiom12(test1) shouldBe a12
+      t.compliant(test1) shouldBe a12
+    }
+
+    testcm0.compliant(test0) shouldBe true
   }
 
   feature("Testing Validity") {

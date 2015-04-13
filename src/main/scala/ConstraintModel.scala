@@ -2,7 +2,7 @@ import Utils._
 
 case class ConstraintModel(rolec: Map[String, List[((Int, Int), Any)]],
                            card: Map[String, ((Int, Int), (Int, Int))],
-                           intra: List[(String, (Any) => Boolean)]) {
+                           intra: List[(String, (List[(String,String)]) => Boolean)]) {
 
   def compliant(crom: CROM): Boolean = crom.wellformed && axiom12(crom)
 
