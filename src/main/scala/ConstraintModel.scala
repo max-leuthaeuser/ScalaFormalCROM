@@ -2,13 +2,13 @@ import Utils._
 
 case class ConstraintModel(rolec: Map[String, List[((Int, Int), Any)]],
                            card: Map[String, ((Int, Int), (Int, Int))],
-                           intra: Set[(String, (Any) => Boolean)]) {
+                           intra: List[(String, (Any) => Boolean)]) {
 
   def compliant(crom: CROM): Boolean = crom.wellformed && axiom12(crom)
 
   def axiom12(crom: CROM): Boolean =
     all(for (ct1 <- crom.ct if rolec.contains(ct1); (crd, a) <- rolec(ct1)) yield
-    atoms(a).subsetOf(crom.parts(ct1))
+    atoms(a).toSet.subsetOf(crom.parts(ct1).toSet)
     )
 
   def validity(crom: CROM, croi: CROI): Boolean = compliant(crom) && croi.compliant(crom) &&

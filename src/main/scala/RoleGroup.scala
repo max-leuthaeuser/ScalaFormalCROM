@@ -1,4 +1,4 @@
-case class RoleGroup(rolegroups: Set[Any], lower: Int, upper: Int) {
+case class RoleGroup(rolegroups: List[Any], lower: Int, upper: Int) {
 
   assert(0 <= lower && lower <= upper)
 

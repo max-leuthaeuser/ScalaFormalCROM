@@ -5,31 +5,31 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   info("Test spec for ScalaFormalCROM.")
 
   feature("Testing util functions") {
-    scenario("Testing function for mutually disjoint sets") {
-      mutualDisjoint[Int](List(Set.empty, Set.empty)) shouldBe true
-      mutualDisjoint(List(Set(1, 2), Set(3, 4))) shouldBe true
-      mutualDisjoint[Int](List(Set(1), Set(1))) shouldBe false
-      mutualDisjoint[Int](List(Set.empty, Set(1), Set(1))) shouldBe false
-      mutualDisjoint(List(Set(1, 2, 3), Set(3, 4, 5))) shouldBe false
+    scenario("Testing function for mutually disjoint Lists") {
+      mutualDisjoint[Int](List(List.empty, List.empty)) shouldBe true
+      mutualDisjoint(List(List(1, 2), List(3, 4))) shouldBe true
+      mutualDisjoint[Int](List(List(1), List(1))) shouldBe false
+      mutualDisjoint[Int](List(List.empty, List(1), List(1))) shouldBe false
+      mutualDisjoint(List(List(1, 2, 3), List(3, 4, 5))) shouldBe false
     }
 
     scenario("Testing function for total function") {
-      totalFunction(Set.empty, Map(1 -> Set(1))) shouldBe true
-      totalFunction(Set(1, 2), Map(1 -> Set(1), 2 -> Set(2))) shouldBe true
-      totalFunction(Set(1, 2), Map(1 -> Set(1))) shouldBe false
-      totalFunction[Int](Set(1), Map.empty) shouldBe false
+      totalFunction(List.empty, Map(1 -> List(1))) shouldBe true
+      totalFunction(List(1, 2), Map(1 -> List(1), 2 -> List(2))) shouldBe true
+      totalFunction(List(1, 2), Map(1 -> List(1))) shouldBe false
+      totalFunction[Int](List(1), Map.empty) shouldBe false
     }
   }
 
   feature("Testing CROM") {
-    val test0 = CROM(Set.empty, Set.empty, Set.empty, Set.empty, Set.empty, Map.empty, Map.empty)
-    val test1 = CROM(Set("1"), Set("2", "3"), Set("4"), Set("a"), Set(("1", "2"), ("1", "3")), Map("4" -> Set("2", "3")), Map("a" -> Set("2", "3")))
-    val test2 = CROM(Set("1"), Set("2", "3"), Set("4"), Set("a"), Set(("1", "2")), Map("4" -> Set("2", "3")), Map("a" -> Set("2", "3")))
-    val test3 = CROM(Set("1"), Set("2", "3"), Set("4", "5"), Set("a"), Set(("1", "2"), ("1", "3")), Map("4" -> Set("2", "3"), "5" -> Set.empty), Map("a" -> Set("2", "3")))
-    val test4 = CROM(Set("1"), Set("2", "3"), Set("4", "5"), Set("a"), Set(("1", "2"), ("1", "3")), Map("4" -> Set("2", "3"), "5" -> Set("2")), Map("a" -> Set("2", "3")))
-    val test5 = CROM(Set("1"), Set("2", "3"), Set("4"), Set("a"), Set(("1", "2"), ("1", "3")), Map("4" -> Set("2", "3")), Map("a" -> Set("2", "2")))
-    val test6 = CROM(Set("1"), Set("2", "3"), Set("4", "5"), Set("a"), Set(("1", "2"), ("1", "3")), Map("4" -> Set("2"), "5" -> Set("3")), Map("a" -> Set("2", "3")))
-    val test7 = CROM(Set("1"), Set("2", "3", "4"), Set("5", "6"), Set("a"), Set(("1", "2"), ("1", "3")), Map("5" -> Set("3"), "6" -> Set.empty), Map("a" -> Set("2", "2")))
+    val test0 = CROM(List.empty, List.empty, List.empty, List.empty, List.empty, Map.empty, Map.empty)
+    val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
+    val test2 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
+    val test3 = CROM(List("1"), List("2", "3"), List("4", "5"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3"), "5" -> List.empty), Map("a" -> List("2", "3")))
+    val test4 = CROM(List("1"), List("2", "3"), List("4", "5"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3"), "5" -> List("2")), Map("a" -> List("2", "3")))
+    val test5 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "2")))
+    val test6 = CROM(List("1"), List("2", "3"), List("4", "5"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2"), "5" -> List("3")), Map("a" -> List("2", "3")))
+    val test7 = CROM(List("1"), List("2", "3", "4"), List("5", "6"), List("a"), List(("1", "2"), ("1", "3")), Map("5" -> List("3"), "6" -> List.empty), Map("a" -> List("2", "2")))
 
     val cromtests = Seq((test0, true, true, true, true, true),
       (test1, true, true, true, true, true), (test2, false, true, true, true, true),

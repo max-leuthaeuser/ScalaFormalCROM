@@ -1,13 +1,13 @@
 import Utils._
 
 case class CROM(
-                 nt: Set[String],
-                 rt: Set[String],
-                 ct: Set[String],
-                 rst: Set[String],
-                 fills: Set[(String, String)],
-                 parts: Map[String, Set[String]],
-                 rel: Map[String, Set[String]]
+                 nt: List[String],
+                 rt: List[String],
+                 ct: List[String],
+                 rst: List[String],
+                 fills: List[(String, String)],
+                 parts: Map[String, List[String]],
+                 rel: Map[String, List[String]]
                  ) {
 
   assert(mutualDisjoint(List(nt, rt, ct, rst)))
@@ -28,5 +28,5 @@ case class CROM(
     all(rst.map(r => rel(r).head != rel(r).tail.head))
 
   def axiom5: Boolean =
-    all(rst.map(r => any(ct.map(c => rel(r).subsetOf(parts(c))))))
+    all(rst.map(r => any(ct.map(c => rel(r).toSet.subsetOf(parts(c).toSet)))))
 }

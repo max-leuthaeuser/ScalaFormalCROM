@@ -1,16 +1,16 @@
 import Utils._
 
 case class CROI(
-                 n: Set[String],
-                 r: Set[String],
-                 c: Set[String],
+                 n: List[String],
+                 r: List[String],
+                 c: List[String],
                  type1: Map[String, String],
-                 plays: Set[(String, String, String)],
-                 links: Map[(String, String), Set[(String, String)]]
+                 plays: List[(String, String, String)],
+                 links: Map[(String, String), List[(String, String)]]
                  ) {
 
-  assert(mutualDisjoint(List(n, r, c, Set(""))))
-  assert(totalFunction(n.union(r).union(c), type1.map { case (k, v) => (k, Set(v)) }))
+  assert(mutualDisjoint(List(n, r, c, List(""))))
+  assert(totalFunction(n.union(r).union(c), type1.map { case (k, v) => (k, List(v)) }))
 
   def compliant(crom: CROM): Boolean = crom.wellformed &&
     axiom6(crom) && axiom7(crom) && axiom8(crom) &&
@@ -40,20 +40,20 @@ case class CROI(
     !links(rst1, c1).contains((r_1, "")) && !links((rst1, c1)).contains(("", r_2))
     )
 
-  def o: Set[String] = n.union(c)
+  def o: List[String] = n.union(c)
 
-  def o_c(c: String): Set[String] = plays.filter(_._2 == c).map(_._1)
+  def o_c(c: String): List[String] = plays.filter(_._2 == c).map(_._1)
 
-  def repsilon: Set[String] = r.union(Set(""))
+  def repsilon: List[String] = r.union(List(""))
 
-  def pred(rst: String, c: String, r: String): Set[String] = links.contains((rst, c)) match {
+  def pred(rst: String, c: String, r: String): List[String] = links.contains((rst, c)) match {
     case true => links((rst, c)).filter(_._2 == r).map(_._1)
-    case false => Set.empty
+    case false => List.empty
   }
 
-  def succ(rst: String, c: String, r: String): Set[String] = links.contains((rst, c)) match {
+  def succ(rst: String, c: String, r: String): List[String] = links.contains((rst, c)) match {
     case true => links((rst, c)).filter(_._1 == r).map(_._2)
-    case false => Set.empty
+    case false => List.empty
   }
 
   def player(r: String): String = r match {
@@ -64,5 +64,5 @@ case class CROI(
     }
   }
 
-  def overline_links(rst: String, c: String): Set[(String, String)] = links((rst, c)).map { case (r_1, r_2) => (player(r_1), player(r_2)) }
+  def overline_links(rst: String, c: String): List[(String, String)] = links((rst, c)).map { case (r_1, r_2) => (player(r_1), player(r_2)) }
 }
