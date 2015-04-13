@@ -48,7 +48,44 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   }
 
   feature("Testing CROI") {
+    val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
 
+
+    val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test8b = CROI(List.empty, List.empty, List.empty, Map.empty, List.empty, Map.empty)
+    val test9 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "5", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test10 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "2", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", ""),("3",""))))
+    val test11 = CROI(List("1"), List("2", "3"), List("4", "5"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "4"), List(("1", "4", "2"), ("1", "5", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test11b = CROI(List("1", "5"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test12 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"), ("", ""))))
+    val test13 = CROI(List("1", "6"), List("2", "3", "5"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "3", "6" -> "1"), List(("1", "4", "2"), ("1", "4", "3"), ("6", "4", "5")), Map(("a", "4") -> List(("2", "3"))))
+    val test13b = CROI(List("1", "6"), List("2", "3", "5"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "5" -> "2", "6" -> "1", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3"), ("6", "4", "5")), Map(("a", "4") -> List(("2", "3"))))
+    val test14 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"), ("2", ""))))
+    val test14b = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"), ("", "3"))))
+    val test15 = CROI(List("1"), List("2", "3", "5", "6"), List("4"), Map("1" -> "1", "2" -> "5", "3" -> "3", "4" -> "4", "5" -> "3", "6" -> "2"), List(("1", "4", "2"), ("1", "4", "5"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"), ("", ""), ("2", ""))))
+
+    val croitests = Seq((test8, true, true, true, true, true, true),
+      (test8b, true, true, true, true, true, true),
+      (test9, false, true, true, true, true, true),
+      (test10, true, false, true, true, true, true),
+      (test11, true, true, false, true, true, true),
+      (test11b, true, true, false, true, true, true),
+      (test12, true, true, true, false, true, true),
+      (test13, true, true, true, true, false, true),
+      (test13b, true, true, true, true, false, true),
+      (test14, true, true, true, true, true, false),
+      (test14b, true, true, true, true, true, false),
+      (test15, false, false, false, false, false, false))
+
+    for ((t, a6, a7, a8, a9, a10, a11) <- croitests) {
+      t.axiom6(test1) shouldBe a6
+      t.axiom7(test1) shouldBe a7
+      t.axiom8(test1) shouldBe a8
+      t.axiom9(test1) shouldBe a9
+      t.axiom10(test1) shouldBe a10
+      t.axiom11(test1) shouldBe a11
+      t.compliant(test1) shouldBe (a6 && a7 && a8 && a9 && a10 && a11)
+    }
   }
 
   feature("Testing Role Groups") {

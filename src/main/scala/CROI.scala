@@ -17,7 +17,7 @@ case class CROI(
     axiom9(crom) && axiom10(crom) && axiom11(crom)
 
   def axiom6(crom: CROM): Boolean =
-    all(plays.map { case (o, c1, r1) => crom.fills.contains(type1(o), type1(r1)) && crom.parts(type1(c1)).contains(type1(r1)) })
+    all(plays.map { case (o, c1, r1) => crom.fills.contains((type1(o), type1(r1))) && crom.parts(type1(c1)).contains(type1(r1)) })
 
   def axiom7(crom: CROM): Boolean =
     all(for ((o, c, r) <- plays; (o1, c1, r1) <- plays if o1 == o && c1 == c && r1 != r) yield type1(r1) != type1(r))
@@ -26,10 +26,10 @@ case class CROI(
     all((for (r1 <- r) yield for ((o, c, r2) <- plays if r2 == r1) yield (o, c)).map(_.size == 1))
 
   def axiom9(crom: CROM): Boolean =
-    all(for (c1 <- c; r1 <- crom.rst if links.contains((r1, c1))) yield !links.contains(("", "")))
+    all(for (c1 <- c; r1 <- crom.rst if links.contains((r1, c1))) yield !links((r1, c1)).contains(("", "")))
 
   def axiom10(crom: CROM): Boolean =
-    all(for (o1 <- o; r1 <- r; rst1 <- crom.rst; c1 <- c if links.contains((rst1, c1))) yield
+    all(for (rst1 <- crom.rst; c1 <- c if links.contains((rst1, c1)); r1 <- r; o1 <- o) yield
     any(for (r_1 <- repsilon) yield
     ((plays.contains(o1, c1, r1) && (type1(r1) == crom.rel(rst1).head)) == links((rst1, c1)).contains((r1, r_1))) && ((plays.contains(o1, c1, r1) && (type1(r1) == crom.rel(rst1).tail.head)) == links((rst1, c1)).contains((r_1, r1)))
     )
