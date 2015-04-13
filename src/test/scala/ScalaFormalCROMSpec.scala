@@ -113,10 +113,9 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
 
     val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
-
     val rgxor = RoleGroup(List("2", "3"), 1, 1)
-    val testcm0 = ConstraintModel(Map.empty, Map.empty, List.empty)
 
+    val testcm0 = ConstraintModel(Map.empty, Map.empty, List.empty)
     val testcm1 = ConstraintModel(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
     val testcm2 = ConstraintModel(Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
     val testcm3 = ConstraintModel(Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
@@ -135,6 +134,44 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   }
 
   feature("Testing Validity") {
+    val test0 = CROM(List.empty, List.empty, List.empty, List.empty, List.empty, Map.empty, Map.empty)
+    val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
+    val testcm0 = ConstraintModel(Map.empty, Map.empty, List.empty)
+    val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
+    val rgxor = RoleGroup(List("2", "3"), 1, 1)
+    val testcm1 = ConstraintModel(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test8b = CROI(List.empty, List.empty, List.empty, Map.empty, List.empty, Map.empty)
 
+    val test16 = CROI(List("1", "5"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test17 = CROI(List("1", "0"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "0" -> "1"), List(("1", "4", "2"), ("0", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+    val test18 = CROI(List("1", "5", "6"), List("2", "3", "7"), List("4"), Map("1" -> "1", "6" -> "1", "2" -> "2", "3" -> "3", "7" -> "3", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "3"), ("6", "4", "7")), Map(("a", "4") -> List(("2", "3"), ("2", "7"))))
+    val test18b = CROI(List("1", "5", "0"), List("2", "3", "7"), List("4"), Map("1" -> "1", "0" -> "1", "2" -> "2", "3" -> "3", "7" -> "2", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "3"), ("0", "4", "7")), Map(("a", "4") -> List(("2", "3"), ("7", "3"))))
+    val test19 = CROI(List("1", "5", "6"), List("2", "3", "7", "8"), List("4"), Map("1" -> "1", "5" -> "1", "6" -> "1", "2" -> "2", "3" -> "3", "7" -> "2", "8" -> "3", "4" -> "4"), List(("1", "4", "2"), ("5", "4", "3"), ("5", "4", "7"), ("6", "4", "8")), Map(("a", "4") -> List(("2", "3"), ("7", "8"))))
+    val test20 = CROI(List("1", "5", "6", "9"), List("2", "3", "7", "8"), List("4"), Map("1" -> "1", "5" -> "1", "6" -> "1", "9" -> "1", "2" -> "2", "3" -> "3", "7" -> "2", "8" -> "3", "4" -> "4"), List(("1", "4", "2"), ("5", "4", "3"), ("6", "4", "7"), ("9", "4", "8")), Map(("a", "4") -> List(("2", "3"), ("7", "8"))))
+
+    val valtests = Seq((test0, testcm0, test8, false, true, true, true, true),
+      (test0, testcm0, test8b, true, true, true, true, true),
+      (test1, testcm0, test8, true, true, true, true, true),
+      (test1, testcm0, test8b, true, true, true, true, true),
+      (test0, testcm1, test8, false, true, false, true, true),
+      (test0, testcm1, test8b, true, true, true, true, true),
+      (test1, testcm1, test8, true, false, false, true, true),
+      (test1, testcm1, test8b, true, true, true, true, true),
+      (test1, testcm1, test16, true, true, true, true, true),
+      (test1, testcm1, test17, true, true, true, true, false),
+      (test1, testcm1, test18, true, true, true, false, true),
+      (test1, testcm1, test18b, true, true, true, false, true),
+      (test1, testcm1, test19, true, true, false, true, true),
+      (test1, testcm1, test20, true, false, true, true, true))
+
+    for ((m, c, i, co, a13, a14, a15, a16) <- valtests) {
+      assert(i.compliant(m) == co, i)
+      assert(c.axiom13(m, i) == a13)
+      assert(c.axiom14(m, i) == a14)
+      assert(c.axiom15(m, i) == a15)
+      assert(c.axiom16(m, i) == a16)
+      assert(c.validity(m, i) == (co && a13 && a14 && a15 && a16))
+    }
   }
 }
