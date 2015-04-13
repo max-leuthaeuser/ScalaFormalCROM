@@ -49,12 +49,10 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   feature("Testing CROI") {
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
-
-
     val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test8b = CROI(List.empty, List.empty, List.empty, Map.empty, List.empty, Map.empty)
     val test9 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "5", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
-    val test10 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "2", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", ""),("3",""))))
+    val test10 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "2", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", ""), ("3", ""))))
     val test11 = CROI(List("1"), List("2", "3"), List("4", "5"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "4"), List(("1", "4", "2"), ("1", "5", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test11b = CROI(List("1", "5"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test12 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"), ("", ""))))
@@ -89,7 +87,25 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   }
 
   feature("Testing Role Groups") {
+    val testrg1 = "2"
+    val testrg2 = RoleGroup(List("2", "3"), 2, 2)
+    val testrg3 = RoleGroup(List(RoleGroup(List("2", RoleGroup(List("3"), 1, 2)), 0, 1), "2"), 1, 1)
+    val testrg4 = RoleGroup(List.empty, 0, 0)
+    val testrg5 = RoleGroup(List.empty, 1, 1)
+    val testrg6 = RoleGroup(List("2"), 0, 0)
+    val testrg7 = RoleGroup(List("5"), 0, 0)
 
+    val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
+
+    val rgtests = Seq((testrg1, List("2"), 1), (testrg2, List("2", "3"), 1),
+      (testrg3, List("2", "3"), 1), (testrg4, List.empty, 1),
+      (testrg5, List.empty, 0), (testrg6, List("2"), 0),
+      (testrg7, List("5"), 1))
+
+    for ((t, s, e) <- rgtests) {
+      assert(atoms(t) == s)
+      assert(evaluate(t, test8, "1", "4") == e)
+    }
   }
 
   feature("Testing Constraint Models") {

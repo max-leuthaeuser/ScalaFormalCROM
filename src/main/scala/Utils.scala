@@ -13,11 +13,11 @@ object Utils {
 
   def atoms(a: Any): List[String] = a match {
     case elem: String => List(elem)
-    case elem: RoleGroup => elem.rolegroups.map(atoms).flatten
+    case elem: RoleGroup => elem.rolegroups.map(atoms).flatten.distinct
   }
 
   def evaluate(a: Any, croi: CROI, o: String, c: String): Int = a match {
-    case elem: String => any(croi.r.toList.filter(croi.type1(_) == a).map(rr => croi.plays.contains((o, c, rr)))) match {
+    case elem: String => any(croi.r.filter(croi.type1(_) == a).map(rr => croi.plays.contains((o, c, rr)))) match {
       case true => 1
       case false => 0
     }
