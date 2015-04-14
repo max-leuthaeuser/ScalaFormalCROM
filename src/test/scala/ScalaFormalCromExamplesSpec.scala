@@ -19,7 +19,9 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
         "trans" -> List("Source", "Target"))
     )
 
-    bank.wellformed shouldBe true
+    scenario("Testing well formedness of banking model") {
+      bank.wellformed shouldBe true
+    }
 
     val bankaccounts = RoleGroup(List("CA", "SA"), 1, 1)
     val participants = RoleGroup(List("Source", "Target"), 1, 1)
@@ -38,7 +40,9 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
       List(("advises", irreflexive))
     )
 
-    c_bank.compliant(bank) shouldBe true
+    scenario("Testing compliance of banking model") {
+      c_bank.compliant(bank) shouldBe true
+    }
 
     val bank1 = CROI(List("Peter", "Klaus", "Google", "Account_1", "Account_2"),
       List("Cu_1", "Cu_2", "Cu_3", "Ca", "Sa", "S", "T", "M"),
@@ -53,20 +57,21 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
         ("Account_2", "bank", "Ca"), ("Account_1", "bank", "Sa"),
         ("transaction", "bank", "M"),
         ("Account_2", "transaction", "S"), ("Account_2", "transaction", "T")),
-      Map(("own_ca", "bank") -> List(("Cu_1", "Ca"), ("Cu_2", ""), ("Cu_3", "")),
-        ("own_sa", "bank") -> List(("Cu_1", ""), ("Cu_2", "Sa"), ("Cu_3", "")),
-        ("advises", "bank") -> List(("", "Cu_1"), ("", "Cu_2"), ("", "Cu_3")),
+      Map(("own_ca", "bank") -> List(("Cu_1", "Ca"), ("Cu_2", null), ("Cu_3", null)),
+        ("own_sa", "bank") -> List(("Cu_1", null), ("Cu_2", "Sa"), ("Cu_3", null)),
+        ("advises", "bank") -> List((null, "Cu_1"), (null, "Cu_2"), (null, "Cu_3")),
         ("trans", "transaction") -> List(("S", "T")))
     )
 
-    bank1.compliant(bank) shouldBe true
-
-    bank1.axiom6(bank) shouldBe true
-    bank1.axiom7(bank) shouldBe true
-    bank1.axiom8(bank) shouldBe true
-    bank1.axiom9(bank) shouldBe true
-    bank1.axiom10(bank) shouldBe true
-    bank1.axiom11(bank) shouldBe true
+    scenario("Testing axioms 6 - 11 of the banking example 1") {
+      bank1.compliant(bank) shouldBe true
+      bank1.axiom6(bank) shouldBe true
+      bank1.axiom7(bank) shouldBe true
+      bank1.axiom8(bank) shouldBe true
+      bank1.axiom9(bank) shouldBe true
+      bank1.axiom10(bank) shouldBe true
+      bank1.axiom11(bank) shouldBe true
+    }
 
     val bank2 = CROI(List("Peter", "Klaus", "Google", "Account_1", "Account_2"),
       List("Con", "Cu_1", "Cu_2", "Ca", "Sa", "S", "T", "M"),
@@ -81,31 +86,36 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
         ("Account_2", "bank", "Ca"), ("Account_1", "bank", "Sa"),
         ("transaction", "bank", "M"),
         ("Account_1", "transaction", "S"), ("Account_2", "transaction", "T")),
-      Map(("own_ca", "bank") -> List(("Cu_1", "Ca"), ("Cu_2", "")),
-        ("own_sa", "bank") -> List(("Cu_1", ""), ("Cu_2", "Sa")),
-        ("advises", "bank") -> List(("", "Cu_1"), ("Con", "Cu_2")),
+      Map(("own_ca", "bank") -> List(("Cu_1", "Ca"), ("Cu_2", null)),
+        ("own_sa", "bank") -> List(("Cu_1", null), ("Cu_2", "Sa")),
+        ("advises", "bank") -> List((null, "Cu_1"), ("Con", "Cu_2")),
         ("trans", "transaction") -> List(("S", "T")))
     )
 
-    bank2.compliant(bank) shouldBe true
+    scenario("Testing axioms 6 - 11 of the banking example 2") {
+      bank2.compliant(bank) shouldBe true
+      bank2.axiom6(bank) shouldBe true
+      bank2.axiom7(bank) shouldBe true
+      bank2.axiom8(bank) shouldBe true
+      bank2.axiom9(bank) shouldBe true
+      bank2.axiom10(bank) shouldBe true
+      bank2.axiom11(bank) shouldBe true
+    }
 
-    bank2.axiom6(bank) shouldBe true
-    bank2.axiom7(bank) shouldBe true
-    bank2.axiom8(bank) shouldBe true
-    bank2.axiom9(bank) shouldBe true
-    bank2.axiom10(bank) shouldBe true
-    bank2.axiom11(bank) shouldBe true
+    scenario("Testing validity of the banking example 1") {
+      c_bank.validity(bank, bank1) shouldBe false
+      c_bank.axiom13(bank, bank1) shouldBe false
+      c_bank.axiom14(bank, bank1) shouldBe false
+      c_bank.axiom15(bank, bank1) shouldBe false
+      c_bank.axiom16(bank, bank1) shouldBe true
+    }
 
-    c_bank.validity(bank, bank1) shouldBe false
-    c_bank.axiom13(bank, bank1) shouldBe false
-    c_bank.axiom14(bank, bank1) shouldBe false
-    c_bank.axiom15(bank, bank1) shouldBe false
-    c_bank.axiom16(bank, bank1) shouldBe true
-
-    c_bank.validity(bank, bank2) shouldBe true
-    c_bank.axiom13(bank, bank2) shouldBe true
-    c_bank.axiom14(bank, bank2) shouldBe true
-    c_bank.axiom15(bank, bank2) shouldBe true
-    c_bank.axiom16(bank, bank2) shouldBe true
+    scenario("Testing validity of the banking example 2") {
+      c_bank.validity(bank, bank2) shouldBe true
+      c_bank.axiom13(bank, bank2) shouldBe true
+      c_bank.axiom14(bank, bank2) shouldBe true
+      c_bank.axiom15(bank, bank2) shouldBe true
+      c_bank.axiom16(bank, bank2) shouldBe true
+    }
   }
 }

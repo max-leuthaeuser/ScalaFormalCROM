@@ -1,14 +1,18 @@
 import Utils._
 
-case class CROM(
-                 nt: List[String],
-                 rt: List[String],
-                 ct: List[String],
-                 rst: List[String],
-                 fills: List[(String, String)],
-                 parts: Map[String, List[String]],
-                 rel: Map[String, List[String]]
-                 ) {
+object CROM {
+  def empty[T >: Null]: CROM[T] = CROM[T](List.empty, List.empty, List.empty, List.empty, List.empty, Map.empty, Map.empty)
+}
+
+case class CROM[T >: Null](
+                            nt: List[T],
+                            rt: List[T],
+                            ct: List[T],
+                            rst: List[T],
+                            fills: List[(T, T)],
+                            parts: Map[T, List[T]],
+                            rel: Map[T, List[T]]
+                            ) {
 
   assert(mutualDisjoint(List(nt, rt, ct, rst)))
   assert(totalFunction(ct, parts))
