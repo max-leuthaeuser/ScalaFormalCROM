@@ -166,12 +166,12 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
       (test1, testcm1, test20, true, false, true, true, true))
 
     for ((m, c, i, co, a13, a14, a15, a16) <- valtests) {
-      assert(i.compliant(m) == co, i)
-      assert(c.axiom13(m, i) == a13)
-      assert(c.axiom14(m, i) == a14)
-      assert(c.axiom15(m, i) == a15)
-      assert(c.axiom16(m, i) == a16)
-      assert(c.validity(m, i) == (co && a13 && a14 && a15 && a16))
+      i.compliant(m) shouldBe co
+      c.axiom13(m, i) shouldBe a13
+      c.axiom14(m, i) shouldBe a14
+      c.axiom15(m, i) shouldBe a15
+      c.axiom16(m, i) shouldBe a16
+      c.validity(m, i) shouldBe (co && a13 && a14 && a15 && a16)
     }
   }
 }
