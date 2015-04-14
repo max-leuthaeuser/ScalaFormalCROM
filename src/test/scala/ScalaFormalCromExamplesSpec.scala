@@ -52,7 +52,7 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
       List(("Klaus", "bank", "Cu_1"), ("Google", "bank", "Cu_2"), ("Peter", "bank", "Cu_3"),
         ("Account_2", "bank", "Ca"), ("Account_1", "bank", "Sa"),
         ("transaction", "bank", "M"),
-        ("Account_1", "transaction", "S"), ("Account_2", "transaction", "T")),
+        ("Account_2", "transaction", "S"), ("Account_2", "transaction", "T")),
       Map(("own_ca", "bank") -> List(("Cu_1", "Ca"), ("Cu_2", ""), ("Cu_3", "")),
         ("own_sa", "bank") -> List(("Cu_1", ""), ("Cu_2", "Sa"), ("Cu_3", "")),
         ("advises", "bank") -> List(("", "Cu_1"), ("", "Cu_2"), ("", "Cu_3")),
@@ -96,26 +96,16 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
     bank2.axiom10(bank) shouldBe true
     bank2.axiom11(bank) shouldBe true
 
-    if (!c_bank.validity(bank, bank1)) {
-      println("The first example is not compliant to the CROM bank")
-      println("The following axioms were violated:")
-      if (!c_bank.axiom13(bank, bank1)) println("axiom 13")
-      if (!c_bank.axiom14(bank, bank1)) println("axiom 14")
-      if (!c_bank.axiom15(bank, bank1)) println("axiom 15")
-      if (!c_bank.axiom16(bank, bank1)) println("axiom 16")
-    } else {
-      println("The first example is compliant to the CROM bank")
-    }
+    c_bank.validity(bank, bank1) shouldBe false
+    c_bank.axiom13(bank, bank1) shouldBe false
+    c_bank.axiom14(bank, bank1) shouldBe false
+    c_bank.axiom15(bank, bank1) shouldBe false
+    c_bank.axiom16(bank, bank1) shouldBe true
 
-    if (!c_bank.validity(bank, bank2)) {
-      println("The second example is not compliant to the CROM bank")
-      println("The following axioms were violated:")
-      if (!c_bank.axiom13(bank, bank2)) println("axiom 13")
-      if (!c_bank.axiom14(bank, bank2)) println("axiom 14")
-      if (!c_bank.axiom15(bank, bank2)) println("axiom 15")
-      if (!c_bank.axiom16(bank, bank2)) println("axiom 16")
-    } else {
-      println("The second example is compliant to the CROM bank")
-    }
+    c_bank.validity(bank, bank2) shouldBe true
+    c_bank.axiom13(bank, bank2) shouldBe true
+    c_bank.axiom14(bank, bank2) shouldBe true
+    c_bank.axiom15(bank, bank2) shouldBe true
+    c_bank.axiom16(bank, bank2) shouldBe true
   }
 }
