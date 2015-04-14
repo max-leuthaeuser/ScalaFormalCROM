@@ -1,6 +1,8 @@
 ScalaFormalCROM
 ===============
 
+[![Build Status](https://travis-ci.org/max-leuthaeuser/ScalaFormalCROM.svg)](https://travis-ci.org/max-leuthaeuser/ScalaFormalCROM)
+
 **1. Description:**
 This is an adaption for Scala of [formalCROM][formalCROM].
 
