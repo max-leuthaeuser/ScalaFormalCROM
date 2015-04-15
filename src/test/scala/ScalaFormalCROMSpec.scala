@@ -11,6 +11,7 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
       mutualDisjoint(List(List(1), List(1))) shouldBe false
       mutualDisjoint(List(List.empty, List(1), List(1))) shouldBe false
       mutualDisjoint(List(List(1, 2, 3), List(3, 4, 5))) shouldBe false
+      mutualDisjoint(List(List(1, 1), List(2))) shouldBe true
     }
 
     scenario("Testing function for total function") {

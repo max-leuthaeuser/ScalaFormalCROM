@@ -1,8 +1,8 @@
 object Utils {
 
   def mutualDisjoint[T](sets: List[List[T]]): Boolean = {
-    val all = sets.flatten
-    all.size == all.toSet.size
+    val all = sets.map(_.distinct).flatten
+    all.size == all.distinct.size
   }
 
   def totalFunction[T](domain: List[T], foo: Map[T, List[T]]): Boolean = domain.toSet.subsetOf(foo.keySet)
