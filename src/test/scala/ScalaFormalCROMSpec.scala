@@ -18,12 +18,12 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
       totalFunction(List.empty, Map(1 -> List(1))) shouldBe true
       totalFunction(List(1, 2), Map(1 -> List(1), 2 -> List(2))) shouldBe true
       totalFunction(List(1, 2), Map(1 -> List(1))) shouldBe false
-      totalFunction[Int](List(1), Map.empty) shouldBe false
+      totalFunction(List(1), Map.empty[Int, List[Int]]) shouldBe false
     }
   }
 
   feature("Testing CROM") {
-    val test0 = CROM.empty[String]
+    val test0 = CROM.empty[String, String, String, String]
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
     val test2 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
     val test3 = CROM(List("1"), List("2", "3"), List("4", "5"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3"), "5" -> List.empty), Map("a" -> List("2", "3")))
@@ -51,7 +51,7 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   feature("Testing CROI") {
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
     val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
-    val test8b = CROI.empty[String]
+    val test8b = CROI.empty[String, String, String, String]
     val test9 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "5", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test10 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "2", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", null), ("3", null))))
     val test11 = CROI(List("1"), List("2", "3"), List("4", "5"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "4"), List(("1", "4", "2"), ("1", "5", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
@@ -110,18 +110,18 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   }
 
   feature("Testing Constraint Models") {
-    val test0 = CROM.empty[String]
+    val test0 = CROM.empty[String, String, String, String]
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
 
     val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
     val rgxor = RoleGroup(List("2", "3"), 1, 1)
 
-    val testcm0 = ConstraintModel.empty[String]
-    val testcm1 = ConstraintModel(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
-    val testcm2 = ConstraintModel(Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
-    val testcm3 = ConstraintModel[String](Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
-    val testcm4 = ConstraintModel[String](Map("4" -> List(((1, 1), "5"))), Map.empty, List.empty)
-    val testcm5 = ConstraintModel[String](Map("5" -> List(((1, 1), "2"))), Map.empty, List.empty)
+    val testcm0 = ConstraintModel.empty[String, String, String, String]
+    val testcm1 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val testcm2 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
+    val testcm3 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
+    val testcm4 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "5"))), Map.empty, List.empty)
+    val testcm5 = ConstraintModel[String, String, String, String](Map("5" -> List(((1, 1), "2"))), Map.empty, List.empty)
 
     val cmtests = Seq((testcm0, true), (testcm1, true), (testcm2, true),
       (testcm3, true), (testcm4, false), (testcm5, true))
@@ -135,14 +135,14 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
   }
 
   feature("Testing Validity") {
-    val test0 = CROM.empty[String]
+    val test0 = CROM.empty[String, String, String, String]
     val test1 = CROM(List("1"), List("2", "3"), List("4"), List("a"), List(("1", "2"), ("1", "3")), Map("4" -> List("2", "3")), Map("a" -> List("2", "3")))
-    val testcm0 = ConstraintModel.empty[String]
+    val testcm0 = ConstraintModel.empty[String, String, String, String]
     val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
     val rgxor = RoleGroup(List("2", "3"), 1, 1)
-    val testcm1 = ConstraintModel(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val testcm1 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
     val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
-    val test8b = CROI.empty[String]
+    val test8b = CROI.empty[String, String, String, String]
 
     val test16 = CROI(List("1", "5"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "5" -> "1"), List(("1", "4", "2"), ("5", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test17 = CROI(List("1", "0"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4", "0" -> "1"), List(("1", "4", "2"), ("0", "4", "3")), Map(("a", "4") -> List(("2", "3"))))

@@ -31,7 +31,7 @@ class ScalaFormalCromExamplesSpec extends FeatureSpec with GivenWhenThen with Ma
     // TODO: how to represent * as multiplicity?
     val inf = Integer.MAX_VALUE
 
-    val c_bank = ConstraintModel(Map("Bank" -> List(((1, inf), "Consultant"), ((0, inf), bankaccounts)),
+    val c_bank = ConstraintModel[String, String, String, String](Map("Bank" -> List(((1, inf), "Consultant"), ((0, inf), bankaccounts)),
       "Transaction" -> List(((2, 2), participants))),
       Map("own_ca" ->((1, 1), (0, inf)),
         "own_sa" ->((1, inf), (0, inf)),
