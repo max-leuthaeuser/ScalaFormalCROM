@@ -2,6 +2,19 @@ import Utils._
 
 object CROM {
   def empty[NT >: Null, RT >: Null, CT >: Null, RST >: Null] = CROM[NT, RT, CT, RST](List.empty, List.empty, List.empty, List.empty, List.empty, Map.empty, Map.empty)
+
+  /**
+   * Little helper factory method for creating a ConstrainModel with Strings only.
+   */
+  def forStrings(
+                  nt: List[String],
+                  rt: List[String],
+                  ct: List[String],
+                  rst: List[String],
+                  fills: List[(String, String)],
+                  parts: Map[String, List[String]],
+                  rel: Map[String, List[String]]
+                  ): CROM[String, String, String, String] = CROM(nt, rt, ct, rst, fills, parts, rel)
 }
 
 case class CROM[NT >: Null, RT >: Null, CT >: Null, RST >: Null](

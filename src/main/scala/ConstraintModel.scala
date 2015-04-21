@@ -2,6 +2,13 @@ import Utils._
 
 object ConstraintModel {
   def empty[NT >: Null, RT >: Null, CT >: Null, RST >: Null]: ConstraintModel[NT, RT, CT, RST] = ConstraintModel[NT, RT, CT, RST](Map.empty, Map.empty, List.empty)
+
+  /**
+   * Little helper factory method for creating a ConstrainModel with Strings only.
+   */
+  def forStrings(rolec: Map[String, List[((Int, Int), Any)]],
+                 card: Map[String, ((Int, Int), (Int, Int))],
+                 intra: List[(String, (List[(String, String)]) => Boolean)]): ConstraintModel[String, String, String, String] = ConstraintModel(rolec, card, intra)
 }
 
 case class ConstraintModel[NT >: Null, RT >: Null, CT >: Null, RST >: Null](rolec: Map[CT, List[((Int, Int), Any)]],
@@ -26,7 +33,7 @@ case class ConstraintModel[NT >: Null, RT >: Null, CT >: Null, RST >: Null](role
     )
 
   def axiom14(crom: CROM[NT, RT, CT, RST], croi: CROI[NT, RT, CT, RST]): Boolean =
-    // TODO: fix asInstanceOf
+  // TODO: fix asInstanceOf
     all(for ((o, c, r) <- croi.plays if rolec.contains(croi.type1(c).asInstanceOf[CT]); (crd, a) <- rolec(croi.type1(c).asInstanceOf[CT]) if atoms(a).contains(croi.type1(r))) yield
     evaluate(a, croi, o, c) == 1
     )

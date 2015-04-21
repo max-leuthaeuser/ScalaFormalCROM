@@ -117,11 +117,11 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
     val rgxor = RoleGroup(List("2", "3"), 1, 1)
 
     val testcm0 = ConstraintModel.empty[String, String, String, String]
-    val testcm1 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
-    val testcm2 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
-    val testcm3 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
-    val testcm4 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 1), "5"))), Map.empty, List.empty)
-    val testcm5 = ConstraintModel[String, String, String, String](Map("5" -> List(((1, 1), "2"))), Map.empty, List.empty)
+    val testcm1 = ConstraintModel.forStrings(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val testcm2 = ConstraintModel.forStrings(Map("4" -> List(((1, 1), "2"))), Map("a" ->((1, 1), (1, 1))), List.empty)
+    val testcm3 = ConstraintModel.forStrings(Map("4" -> List(((1, 1), "2"))), Map.empty, List.empty)
+    val testcm4 = ConstraintModel.forStrings(Map("4" -> List(((1, 1), "5"))), Map.empty, List.empty)
+    val testcm5 = ConstraintModel.forStrings(Map("5" -> List(((1, 1), "2"))), Map.empty, List.empty)
 
     val cmtests = Seq((testcm0, true), (testcm1, true), (testcm2, true),
       (testcm3, true), (testcm4, false), (testcm5, true))
@@ -140,7 +140,7 @@ class ScalaFormalCROMSpec extends FeatureSpec with GivenWhenThen with Matchers {
     val testcm0 = ConstraintModel.empty[String, String, String, String]
     val order = (r: List[(String, String)]) => Utils.all(for ((x, y) <- r) yield x <= y)
     val rgxor = RoleGroup(List("2", "3"), 1, 1)
-    val testcm1 = ConstraintModel[String, String, String, String](Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
+    val testcm1 = ConstraintModel.forStrings(Map("4" -> List(((1, 3), rgxor))), Map("a" ->((1, 1), (1, 1))), List(("a", order)))
     val test8 = CROI(List("1"), List("2", "3"), List("4"), Map("1" -> "1", "2" -> "2", "3" -> "3", "4" -> "4"), List(("1", "4", "2"), ("1", "4", "3")), Map(("a", "4") -> List(("2", "3"))))
     val test8b = CROI.empty[String, String, String, String]
 

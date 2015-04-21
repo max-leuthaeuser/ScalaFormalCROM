@@ -2,6 +2,18 @@ import Utils._
 
 object CROI {
   def empty[NT >: Null, RT >: Null, CT >: Null, RST >: Null] = CROI[NT, RT, CT, RST](List.empty, List.empty, List.empty, Map.empty, List.empty, Map.empty)
+
+  /**
+   * Little helper factory method for creating a CROI with Strings only.
+   */
+  def forStrings(
+                  n: List[String],
+                  r: List[String],
+                  c: List[String],
+                  type1: Map[Any, Any],
+                  plays: List[(String, String, String)],
+                  links: Map[(String, String), List[(String, String)]]
+                  ): CROI[String, String, String, String] = CROI(n, r, c, type1, plays, links)
 }
 
 case class CROI[NT >: Null, RT >: Null, CT >: Null, RST >: Null](
