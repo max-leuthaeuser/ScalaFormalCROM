@@ -1,8 +1,8 @@
 name := "ScalaFormalCROM"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.12.3"
 
-val scalatestV = "2.2.1"
+val scalatestV = "3.0.1"
 
 version := "0.0.1"
 
